@@ -20,6 +20,9 @@ public class ProductInputModel {
         this.income = income;
     }
 
+    public ProductInputModel() {
+    }
+
     public String getProductId() {
         return productId;
     }
