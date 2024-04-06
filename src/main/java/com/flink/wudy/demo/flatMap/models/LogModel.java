@@ -42,4 +42,12 @@ public class LogModel{
     public int hashCode() {
         return Objects.hash(page, button);
     }
+
+    @Override
+    public String toString() {
+        return "LogModel{" +
+                "page='" + page + '\'' +
+                ", button='" + button + '\'' +
+                '}';
+    }
 }
