@@ -1,5 +1,14 @@
 package com.flink.wudy.demo.keyBy.example;
 
+import com.flink.wudy.demo.keyBy.models.ProductInputModel;
+import com.flink.wudy.demo.keyBy.source.ProductSource;
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSink;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
 /**
  * 分组聚合：
  * 电商场景：计算店铺中商品的实时销量、店铺的累计销量
@@ -16,5 +25,20 @@ package com.flink.wudy.demo.keyBy.example;
  *
  */
 public class KeyByExamples {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(ParameterTool.fromArgs(args).getConfiguration());
+        env.setParallelism(2);
 
+        DataStream<ProductInputModel> source = env.addSource(new ProductSource());
+        KeyedStream<ProductInputModel, String> transformation =
+        source.keyBy(new KeySelector<ProductInputModel, String>() {
+            @Override
+            public String getKey(ProductInputModel productInputModel) throws Exception {
+                return productInputModel.getProductId();
+            }
+        });
+
+        DataStreamSink<ProductInputModel> sink = transformation.print();
+        env.execute("Flink KeyBy Example");
+    }
 }
