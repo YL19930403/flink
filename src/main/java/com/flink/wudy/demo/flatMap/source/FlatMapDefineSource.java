@@ -28,10 +28,8 @@ public class FlatMapDefineSource implements ParallelSourceFunction<FlatMapInputM
 
         List<FlatMapInputModel> inputModels = Arrays.asList(model1, model2, model3, model4, model5, model6);
 
-        int i = 0;
         Random random = new Random();
         while (!this.isCancel){
-            i++;
             int index = random.nextInt(5);
             sourceContext.collect(inputModels.get(index));
             Thread.sleep(1000);
