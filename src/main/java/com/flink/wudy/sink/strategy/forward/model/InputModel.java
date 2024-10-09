@@ -15,4 +15,8 @@ public class InputModel implements Serializable {
     private Integer indexOfSourceSubTask;
 
     public InputModel() {}
+
+    public InputModel(Integer indexOfSourceSubTask) {
+        this.indexOfSourceSubTask = indexOfSourceSubTask;
+    }
 }
