@@ -2,6 +2,7 @@ package com.flink.wudy.sink.kafka.example;
 
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -22,6 +23,7 @@ import java.util.Properties;
  * >镜像的terminal不能关掉，重新新开一个teminal:docker run --rm -it --net=host lensesio/fast-data-dev bash
  * >创建topic: kafka-topics --create --topic flink-topic --partitions 3 --replication-factor 1 --bootstrap-server 127.0.0.1:9092
  * >producer写入数据: kafka-console-producer --broker-list 127.0.0.1:9092 --topic flink-topic
+ * >consumer消费数据：kafka-console-consumer  --bootstrap-server localhost:9092 --topic flink-sink-topic --from-beginning
  *
  *
  * 数据汇(Kafka)
@@ -44,31 +46,31 @@ import java.util.Properties;
 public class KafkaConsumerExamples {
 
     public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(ParameterTool.fromArgs(args).getConfiguration());
+
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "127.0.0.1:9092");
-        properties.setProperty("group.id", "flink-kafka-source-example-consumer");
+        properties.setProperty("group.id", "flink-kafka-group");
         FlinkKafkaConsumer<String> sourceFunction =
         new FlinkKafkaConsumer<String>(
-                "flink-topic",
+                "flink-sink-topic3",
                 // Flink将数据写入到Kafka Topic时，将数据序列化作为二进制数据时的序列化器，SimpleStringSchema可以将String反序列化为byte[]
                 new SimpleStringSchema(),
                 properties
         );
+        // 指定偏移量
+        sourceFunction.setStartFromLatest();
 
         // 从 flink-topic 的Kafka topic中读取数据
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(ParameterTool.fromArgs(args).getConfiguration());
-        DataStreamSource<String> source = env.addSource(sourceFunction);
-        DataStream<String> transformation = source.map(v -> v.split(" ")[0] + "-kafka-sink-examples");
+       DataStreamSource<String> source = env.addSource(sourceFunction);
+        // 开启checkpoint 每5000ms 一次
+        env.enableCheckpointing(5000);
+        // 设置有且仅有一次模式 目前支持 EXACTLY_ONCE/AT_LEAST_ONCE
+        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+        // 设置checkpoint的存储位置
+//        env.getCheckpointConfig().setCheckpointStorage("hdfs:///flink/checkpoints");
 
-        // 再写入flink-sinktopic中
-        SinkFunction<String> sinkFunction =
-        new FlinkKafkaProducer<String>(
-                "flink-sink-topic",
-                new SimpleStringSchema(),
-                properties
-        );
-
-        DataStreamSink<String> sink = transformation.addSink(sinkFunction);
+        source.print();
         env.execute("Flink Kafka Consumer Example");
     }
 }

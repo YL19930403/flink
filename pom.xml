@@ -29,7 +29,7 @@ under the License.
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<flink.version>1.17.0</flink.version>
+		<flink.version>1.17.1</flink.version>
 		<target.java.version>17</target.java.version>
 		<scala.binary.version>2.12</scala.binary.version>
 		<maven.compiler.source>${target.java.version}</maven.compiler.source>
@@ -37,6 +37,8 @@ under the License.
 		<log4j.version>2.17.1</log4j.version>
 		<lombok.version>1.18.24</lombok.version>
 		<fastjson.version>1.2.83</fastjson.version>
+		<mysql.version>8.0.23</mysql.version>
+		<druid.version>1.2.11</druid.version>
 	</properties>
 
 	<repositories>
@@ -62,18 +64,40 @@ under the License.
 			<version>${flink.version}</version>
 			<scope>provided</scope>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.flink</groupId>-->
+<!--			<artifactId>flink-streaming-java_2.12</artifactId>-->
+<!--			<version>${flink.version}</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
+
+
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-clients</artifactId>
 			<version>${flink.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-clients -->
+<!--		<dependency>-->
+<!--			<groupId>org.apache.flink</groupId>-->
+<!--			<artifactId>flink-clients_2.12</artifactId>-->
+<!--			<version>${flink.version}</version>-->
+<!--		</dependency>-->
+
 
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-walkthrough-common</artifactId>
 			<version>${flink.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-walkthrough-common -->
+<!--		<dependency>-->
+<!--			<groupId>org.apache.flink</groupId>-->
+<!--			<artifactId>flink-walkthrough-common_2.12</artifactId>-->
+<!--			<version>${flink.version}</version>-->
+<!--		</dependency>-->
+
 
 		<dependency>
 			<groupId>org.apache.flink</groupId>
@@ -94,6 +118,21 @@ under the License.
 			<artifactId>flink-connector-kafka</artifactId>
 			<version>${flink.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka -->
+<!--		<dependency>-->
+<!--			<groupId>org.apache.flink</groupId>-->
+<!--			<artifactId>flink-connector-kafka_2.12</artifactId>-->
+<!--			<version>${flink.version}</version>-->
+<!--		</dependency>-->
+
+
+		<!--	Flink开发Scale需要的依赖	-->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-scala_2.12</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
+
 
 		<!-- Add logging framework, to produce console output when running in the IDE. -->
 		<!-- These dependencies are excluded from the application JAR by default. -->
@@ -122,6 +161,18 @@ under the License.
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>${druid.version}</version>
 		</dependency>
 
 <!--		<dependency>-->

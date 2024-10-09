@@ -14,4 +14,5 @@ public class InputModel implements Serializable {
 
     private Integer indexOfSourceSubTask;
 
+    public InputModel() {}
 }
