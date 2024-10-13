@@ -32,7 +32,7 @@ public class SlidingWindowExample {
         WatermarkStrategy<InputModel> watermarkStrategy = WatermarkStrategy
                 // 周期性的生成水位线 有序流：forMonotonousTimestamps()  , 有序流：forMonotonousTimestamps()
                 .<InputModel>forMonotonousTimestamps()
-                // 从数据中获取时间戳作为事件事件语义下的时间戳
+                // 从数据中获取时间戳作为事件时间语义下的时间戳
                 .withTimestampAssigner((e, lastRecordTimeStamp) -> e.getTimestamp());
 
         SingleOutputStreamOperator<OutputModel> transformation = source.assignTimestampsAndWatermarks(watermarkStrategy)
