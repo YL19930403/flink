@@ -3,9 +3,6 @@ package com.flink.wudy.window.tumbling.source;
 import com.flink.wudy.window.tumbling.model.InputModel;
 import org.apache.flink.streaming.api.functions.source.RichParallelSourceFunction;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ProductSource extends RichParallelSourceFunction<InputModel> {
 
     private volatile boolean isCancel = false;
