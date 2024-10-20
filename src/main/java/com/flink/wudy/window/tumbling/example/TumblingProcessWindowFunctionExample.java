@@ -22,6 +22,7 @@ import org.apache.flink.util.IterableUtils;
 import java.util.Date;
 
 /**
+ * 【全量窗口处理函数】
  * 推荐：在生产环境使用ProcessWidowFunction
  *
  * 窗口处理函数：
@@ -35,7 +36,14 @@ import java.util.Date;
  * 3.访问状态：通过Context的windowState()方法访问当前key下窗口内的状态，通过Context的globalState()方法可以访问当前key的状态，这里访问的状态时跨窗口的
  * 4.旁路输出：通过Context的output(OutputTag<X> outputTag, X value) 方法可以将数据输出到指定旁路中
  *
- * 案例：统计每件商品过去1min内的访问次数(pv)以及截止当前这1min的历史累计访问次数
+ * 全量窗口处理函数: 状态大、执行效率低。
+ * > 状态大: 假如1min内所有用户浏览记录10万条，在窗口触发计算前，窗口算子会在状态中缓存这10万条原始记录而不进行计算，导致窗口算子的存储压力比较大
+ * > 执行效率低: 只有在到达窗口结束时间，触发窗口触发器，窗口处理函数才能获取这10万条原始数据进行计算，因此Flink作业的资源使用率呈现时而空载、时而满载的情况
+ *
+ * 应用场景：
+ * > 全量窗口处理函数的特点是在窗口触发时获取全量数据，在同步IO低效问题解决方案中批量访问外部接口，先通过全量窗口拿到1万条数据，再切分为1000条进行外部接口请求
+ *
+ * 案例：统计每件商品过去1min内的访问次数(pv)以及截止当前这1min的历史累计访问次数【全量窗口处理函数案例】
  */
 public class TumblingProcessWindowFunctionExample {
     public static void main(String[] args) throws Exception {
