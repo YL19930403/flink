@@ -24,9 +24,12 @@ import java.util.Date;
  * Flink提供了以下两种增量窗口处理函数:
  * 1.ReduceFunction: 用于对数据进行归约聚合计算，要求输入数据、聚合数据、输出数据的类型一致
  * 2.AggregateFunction:
+ *  > IN: 输入数据类型
+ *  > ACC: 增量计算的中间聚合结果的数据类型
+ *  > OUT： 输出数据类型
  *
  *
- *
+ *  案例：使用ReduceFunction函数计算每种商品1min内的平均销售额
  */
 public class TumblingReduceWindowFunctionExample {
 
